@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs><path id="l" d="M12 2h1.500a1 1 0 0 1 1 1v1.500a10 10 0 0 1-10 10H3a1 1 0 0 1-1-1V12A10 10 0 0 1 12 2z"/></defs>
+  <use href="#l" fill="#3267D5"/>
+  <use href="#l" fill="#75B99A" transform="matrix(-1 0 0 1 32 0)"/>
+  <use href="#l" fill="#F3C85B" transform="matrix(1 0 0 -1 0 32)"/>
+  <use href="#l" fill="#EF9567" transform="matrix(-1 0 0 -1 32 32)"/>
+</svg>

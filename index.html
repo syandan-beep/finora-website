@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Finora | Know where every dollar goes</title>
+  <meta name="description" content="Finora is an AI-powered business spend management platform that helps businesses track expenses, uncover spending patterns and make smarter financial decisions.">
+  <meta name="theme-color" content="#FAF9F7">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<!-- Shared SVG definitions: brand mark, icons, gradients and the grain texture -->
+<svg class="svg-defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix in="noise" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 -1.2 .62" result="speckle"/>
+      <feComposite in="speckle" in2="SourceAlpha" operator="in" result="clipped"/>
+      <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="clipped"/></feMerge>
+    </filter>
+  </defs>
+  <path id="leaf" d="M12 2h1.500a1 1 0 0 1 1 1v1.500a10 10 0 0 1-10 10H3a1 1 0 0 1-1-1V12A10 10 0 0 1 12 2z"/>
+  <!-- The Finora mark: one leaf, mirrored on both axes, one palette colour per leaf. Also published as assets/logo.svg -->
+  <symbol id="logo" viewBox="0 0 32 32">
+    <use href="#leaf" style="fill:var(--color-blue)"/>
+    <use href="#leaf" style="fill:var(--color-green)" transform="matrix(-1 0 0 1 32 0)"/>
+    <use href="#leaf" style="fill:var(--color-yellow)" transform="matrix(1 0 0 -1 0 32)"/>
+    <use href="#leaf" style="fill:var(--color-orange)" transform="matrix(-1 0 0 -1 32 32)"/>
+  </symbol>
+  <symbol id="s-leaf" viewBox="2 2 12.5 12.5"><use href="#leaf"/></symbol>
+  <!-- Illustration family: circle, rounded square, capsule and the leaf from the mark, on one 220 grid -->
+  <symbol id="s-circle" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"/></symbol>
+  <symbol id="s-capsule" viewBox="0 0 100 100"><rect y="27" width="100" height="46" rx="23"/></symbol>
+  <symbol id="s-cluster-a" viewBox="0 0 440 760">
+    <g filter="url(#grain)">
+      <circle cx="110" cy="140" r="100" style="fill:var(--color-powder-blue)"/>
+      <rect x="10" y="260" width="200" height="200" rx="48" style="fill:var(--color-blue)"/>
+      <use href="#s-leaf" x="230" y="260" width="200" height="200" style="fill:var(--color-pale-green)" transform="matrix(-1 0 0 1 660 0)"/>
+      <circle cx="110" cy="580" r="100" style="fill:var(--color-cream-yellow)"/>
+      <rect x="230" y="480" width="200" height="90" rx="45" style="fill:var(--color-green)"/>
+      <rect x="230" y="590" width="200" height="90" rx="45" style="fill:var(--color-powder-blue)"/>
+      <use href="#s-leaf" x="10" y="700" width="200" height="200" style="fill:var(--color-yellow)"/>
+      <circle cx="330" cy="800" r="100" style="fill:var(--color-soft-peach)"/>
+    </g>
+  </symbol>
+  <symbol id="s-cluster-b" viewBox="0 0 440 760">
+    <g filter="url(#grain)">
+      <use href="#s-leaf" x="230" y="40" width="200" height="200" style="fill:var(--color-cream-yellow)" transform="matrix(1 0 0 -1 0 280)"/>
+      <circle cx="110" cy="360" r="100" style="fill:var(--color-green)"/>
+      <rect x="230" y="260" width="200" height="200" rx="48" style="fill:var(--color-powder-blue)"/>
+      <rect x="10" y="480" width="200" height="90" rx="45" style="fill:var(--color-pale-green)"/>
+      <rect x="10" y="590" width="200" height="90" rx="45" style="fill:var(--color-orange)"/>
+      <use href="#s-leaf" x="230" y="480" width="200" height="200" style="fill:var(--color-blue)" transform="matrix(-1 0 0 -1 660 1160)"/>
+      <circle cx="110" cy="800" r="100" style="fill:var(--color-soft-peach)"/>
+      <rect x="230" y="700" width="200" height="200" rx="48" style="fill:var(--color-pale-green)"/>
+    </g>
+  </symbol>
+  <!-- Small compositions for cards and panels. Each is one lead colour with one partner -->
+  <symbol id="s-comp-blue" viewBox="0 0 200 200">
+    <g filter="url(#grain)"><circle cx="118" cy="82" r="72" style="fill:var(--color-blue-soft)"/><rect x="20" y="118" width="136" height="60" rx="30" style="fill:var(--color-green)"/></g>
+  </symbol>
+  <symbol id="s-comp-green" viewBox="0 0 200 200">
+    <g filter="url(#grain)"><rect x="24" y="24" width="112" height="112" rx="28" style="fill:var(--color-green)"/><circle cx="136" cy="136" r="48" style="fill:var(--color-blue)"/></g>
+  </symbol>
+  <symbol id="s-comp-yellow" viewBox="0 0 200 200">
+    <g filter="url(#grain)"><circle cx="86" cy="86" r="70" style="fill:var(--color-yellow)"/><rect x="72" y="126" width="116" height="52" rx="26" style="fill:var(--color-orange)"/></g>
+  </symbol>
+  <symbol id="s-comp-peach" viewBox="0 0 200 200">
+    <g filter="url(#grain)"><circle cx="112" cy="88" r="70" style="fill:var(--color-orange)"/><rect x="16" y="120" width="128" height="58" rx="29" style="fill:var(--color-green)"/></g>
+  </symbol>
+  <symbol id="s-comp-steps" viewBox="0 0 200 200">
+    <g filter="url(#grain)"><circle cx="58" cy="138" r="42" style="fill:var(--color-blue)"/><rect x="88" y="44" width="96" height="44" rx="22" style="fill:var(--color-green)"/><circle cx="150" cy="138" r="30" style="fill:var(--color-orange)"/></g>
+  </symbol>
+  <symbol id="s-comp-control" viewBox="0 0 200 200">
+    <g filter="url(#grain)"><circle cx="110" cy="110" r="84" style="fill:var(--color-blue-soft)"/><rect x="66" y="128" width="124" height="52" rx="26" style="fill:var(--color-green)"/></g>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.500l4.500 4.500L19 7.500"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4.500M12 17.500v.1"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.500 12S6 5.500 12 5.500 21.500 12 21.500 12 18 18.500 12 18.500 2.500 12 2.500 12z"/><circle cx="12" cy="12" r="2.800"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3.500 11.500V4.500a1 1 0 0 1 1-1h7l9 9-8 8z"/><path d="M8 8v.1"/></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24"><path d="M4 19.500V13M10 19.500V8M16 19.500v-9M21 19.500H3"/><path d="M20 19.500V5"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3.500h8l4.500 4.500v12.500H6z"/><path d="M14 3.500V8h4.500M9.500 12.500h5M9.500 16h5"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-6.500L20 11v8.500H4z"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="3" y="5.500" width="18" height="13" rx="2.500"/><path d="M3 10h18"/></symbol>
+  <symbol id="i-pie" viewBox="0 0 24 24"><path d="M12 3.500a8.500 8.500 0 1 0 8.500 8.500H12z"/></symbol>
+  <symbol id="i-team" viewBox="0 0 24 24"><circle cx="9" cy="8.500" r="3.500"/><path d="M3 19.500c.5-3.500 3-5.500 6-5.500s5.500 2 6 5.500M16 5.500a3.500 3.500 0 0 1 0 6.500M18 14.500c1.500.8 2.600 2.500 3 5"/></symbol>
+  <symbol id="i-sync" viewBox="0 0 24 24"><path d="M4.500 10a8 8 0 0 1 14-3l2 2.500M19.500 14a8 8 0 0 1-14 3l-2-2.500"/><path d="M20.500 4.500v5h-5M3.500 19.500v-5h5"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+</svg>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ============ 01 NAVBAR ============ -->
+<header class="nav" id="nav">
+  <div class="container nav__inner">
+    <a class="brand" href="#top" aria-label="Finora home">
+      <svg class="brand__mark" aria-hidden="true"><use href="#logo"/></svg>
+      <span class="brand__word">Finora</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#product">Product</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#insights">Insights</a>
+      <a href="#integrations">Integrations</a>
+    </nav>
+    <div class="nav__actions">
+      <button class="nav__login" type="button" data-info="login">Log in</button>
+      <a class="btn btn--primary btn--sm" href="#demo">Get a Demo</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Toggle menu">
+      <span></span><span></span>
+    </button>
+  </div>
+  <div class="nav__menu" id="mobileMenu">
+    <div class="nav__menu-inner">
+      <nav aria-label="Mobile">
+        <a href="#product">Product</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#insights">Insights</a>
+        <a href="#integrations">Integrations</a>
+      </nav>
+      <div class="nav__menu-actions">
+        <button class="btn btn--ghost" type="button" data-info="login">Log in</button>
+        <a class="btn btn--primary" href="#demo">Get a Demo</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ 02 HERO ============ -->
+<section class="hero" id="top">
+  <div class="container hero__intro">
+    <p class="eyebrow hero-in" style="--i:0">AI-powered business spend management</p>
+    <h1 class="hero__title">
+      <span class="hero-in" style="--i:1">Your business spending.</span>
+      <span class="hero-in" style="--i:2"><span class="hl hl--blue">Understood</span><br class="m-br"> at last.</span>
+    </h1>
+    <div class="hero__sub">
+      <p class="lead hero-in" style="--i:3">Finora brings all your business expenses into one intelligent platform. Track spending, uncover hidden patterns and make smarter financial decisions with AI working behind the scenes.</p>
+      <div class="hero__cta hero-in" style="--i:4">
+        <div class="actions">
+          <a class="btn btn--primary" href="#product">Explore Finora <span class="btn__arrow" aria-hidden="true">→</span></a>
+          <a class="btn btn--ghost" href="#how-it-works">See how it works</a>
+        </div>
+        <p class="micro">Less manual tracking. More financial clarity.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container hero__stage">
+    <!-- Brand geometry: two balanced multicolour compositions either side of the product -->
+    <svg class="geo geo--a" viewBox="0 0 440 760" aria-hidden="true" data-parallax="0.06"><use href="#s-cluster-a"/></svg>
+    <svg class="geo geo--b" viewBox="0 0 440 760" aria-hidden="true" data-parallax="0.06"><use href="#s-cluster-b"/></svg>
+
+    <div class="dash" aria-label="Sample Finora dashboard: business overview for October 2026" role="group">
+      <aside class="dash__rail" aria-hidden="true">
+        <svg class="dash__logo"><use href="#logo"/></svg>
+        <span class="rail-i is-on"><svg class="ico"><use href="#i-home"/></svg></span>
+        <span class="rail-i"><svg class="ico"><use href="#i-card"/></svg></span>
+        <span class="rail-i"><svg class="ico"><use href="#i-pie"/></svg></span>
+        <span class="rail-i"><svg class="ico"><use href="#i-team"/></svg></span>
+      </aside>
+      <div class="dash__main">
+        <header class="dash__head">
+          <div>
+            <h2 class="dash__title">Business overview</h2>
+            <p class="dash__sub">October 2026</p>
+          </div>
+          <span class="tag-sample">Sample data</span>
+        </header>
+        <dl class="metrics" data-counters>
+          <div class="metric"><dt>Total spend</dt><dd data-count="48290" data-prefix="$">$48,290</dd></div>
+          <div class="metric"><dt>Monthly budget</dt><dd data-count="60000" data-prefix="$">$60,000</dd></div>
+          <div class="metric"><dt>Remaining</dt><dd data-count="11710" data-prefix="$">$11,710</dd></div>
+          <div class="metric metric--good"><dt>Spend change</dt><dd><span data-count="8.4" data-prefix="−" data-suffix="%" data-decimals="1">−8.4%</span><small>vs forecast</small></dd></div>
+        </dl>
+        <div class="barchart" id="heroBars" role="img" aria-label="Monthly spend. May $32,000, June $38,000, July $35,000, August $42,000, September $45,000, October $48,290.">
+          <div class="barchart__grid" aria-hidden="true">
+            <span>$60k</span><span>$40k</span><span>$20k</span><span>$0</span>
+          </div>
+          <div class="barchart__bars" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+
+    <article class="fc fc--insight"><div class="fc__body fc__body--float-a">
+      <p class="fc__label"><span class="ai-badge"><svg class="ico--mark"><use href="#logo"/></svg></span>Spending insight</p>
+      <p class="fc__text">Your software expenses increased 18% this month.</p>
+      <p class="fc__text fc__text--dim">3 subscriptions may be overlapping.</p>
+      <a class="link-arrow" href="#insights">View insight <span aria-hidden="true">→</span></a>
+    </div></article>
+
+    <article class="fc fc--expense"><div class="fc__body">
+      <p class="fc__label"><span class="dot-ok"><svg class="ico"><use href="#i-check"/></svg></span>New expense categorized</p>
+      <div class="fc__row"><strong>Notion · Software</strong><strong class="num">$240.00</strong></div>
+      <p class="fc__text fc__text--dim">Automatically categorized as Software &amp; Tools.</p>
+    </div></article>
+
+    <article class="fc fc--budget"><div class="fc__body fc__body--float-b" data-bars>
+      <p class="fc__label">Marketing budget</p>
+      <p class="fc__big num">$8,450 <span>/ $12,000</span></p>
+      <div class="bar" role="img" aria-label="70% of the marketing budget used"><i style="--v:70%"></i></div>
+    </div></article>
+  </div>
+</section>
+
+<!-- ============ 03 TRUST AND VALUE STRIP ============ -->
+<section class="trust" id="trust" aria-labelledby="trustTitle">
+  <div class="container">
+    <div class="trust__top">
+      <h2 class="trust__title reveal" id="trustTitle">Built for businesses that value clarity.</h2>
+      <ul class="trust__list" data-stagger>
+        <li class="reveal"><svg class="ico"><use href="#i-eye"/></svg>Real-time spending visibility</li>
+        <li class="reveal"><svg class="ico"><use href="#i-tag"/></svg>AI-powered categorization</li>
+        <li class="reveal"><svg class="ico"><use href="#i-scale"/></svg>Smarter budget decisions</li>
+        <li class="reveal"><svg class="ico"><use href="#i-doc"/></svg>Complete expense transparency</li>
+      </ul>
+    </div>
+  </div>
+  <div class="logos reveal" id="integrations">
+    <p class="logos__note">Proposed integrations. Illustrative only, not yet available.</p>
+    <div class="logos__viewport" tabindex="0" aria-label="Proposed integrations">
+      <div class="logos__track">
+        <ul class="logos__set">
+          <li class="lg lg--a">Google Workspace</li>
+          <li class="lg lg--b">Slack</li>
+          <li class="lg lg--c">QuickBooks</li>
+          <li class="lg lg--d">Xero</li>
+          <li class="lg lg--e">Stripe</li>
+          <li class="lg lg--a">Microsoft 365</li>
+        </ul>
+        <ul class="logos__set logos__set--dup" aria-hidden="true">
+          <li class="lg lg--a">Google Workspace</li>
+          <li class="lg lg--b">Slack</li>
+          <li class="lg lg--c">QuickBooks</li>
+          <li class="lg lg--d">Xero</li>
+          <li class="lg lg--e">Stripe</li>
+          <li class="lg lg--a">Microsoft 365</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 THE SPENDING PROBLEM ============ -->
+<section class="problem section" id="problem">
+  <div class="container problem__grid">
+    <div class="problem__copy">
+      <p class="eyebrow reveal">The problem</p>
+      <h2 class="h2 reveal">Your money moves <span class="hl hl--yellow" data-hl>fast.</span><br>Your <span class="hl hl--blue" data-hl>visibility</span> shouldn't lag behind.</h2>
+      <p class="lead reveal">Between subscriptions, team purchases, software tools and operational costs, business spending quickly becomes difficult to track. Finora helps you see the complete picture without digging through endless spreadsheets.</p>
+    </div>
+    <div class="problem__stack">
+
+      <article class="pcard reveal">
+        <div class="pcard__viz pcard__viz--blue" aria-hidden="true">
+          <svg class="pcard__shape" viewBox="0 0 200 200"><use href="#s-comp-blue"/></svg>
+          <div class="scatter">
+            <div class="tx-chip tx-chip--1"><span class="tx-chip__src">Team card</span><b>Design tool</b><span class="num">$45.00</span></div>
+            <div class="tx-chip tx-chip--2"><span class="tx-chip__src">Operating account</span><b>Office rent</b><span class="num">$3,200.00</span></div>
+            <div class="tx-chip tx-chip--3"><span class="tx-chip__src">Expense claim</span><b>Client taxi</b><span class="num">$82.40</span></div>
+            <div class="tx-chip tx-chip--4"><span class="tx-chip__src">Invoice</span><b>Print shop</b><span class="num">$310.00</span></div>
+          </div>
+        </div>
+        <div class="pcard__text">
+          <h3>Expenses everywhere</h3>
+          <p>Business expenses are scattered across cards, accounts, tools and departments.</p>
+        </div>
+      </article>
+
+      <article class="pcard reveal">
+        <div class="pcard__viz pcard__viz--green" aria-hidden="true" data-play>
+          <svg class="pcard__shape" viewBox="0 0 200 200"><use href="#s-comp-green"/></svg>
+          <div class="sheet">
+            <div class="sheet__raw">
+              <div class="sheet__row sheet__row--head"><span>A</span><span>B</span><span>C</span><span>D</span></div>
+              <div class="sheet__row"><span>10/02</span><span>Taxi??</span><span>82.4</span><span></span></div>
+              <div class="sheet__row"><span>10/03</span><span>INV-4471</span><span></span><span>310</span></div>
+              <div class="sheet__row"><span>10/05</span><span>Sub (renew)</span><span>59.99</span><span>?</span></div>
+              <div class="sheet__row"><span>10/05</span><span>Sub (renew)</span><span>59.99</span><span>dup?</span></div>
+              <div class="sheet__row"><span>10/09</span><span>Misc card</span><span></span><span>145.2</span></div>
+            </div>
+            <div class="sheet__clean">
+              <div class="clean-row"><i class="sw sw--c4"></i>Client taxi<em class="cat--travel">Travel</em><span class="num">$82.40</span></div>
+              <div class="clean-row"><i class="sw sw--c2"></i>Print shop<em class="cat--marketing">Marketing</em><span class="num">$310.00</span></div>
+              <div class="clean-row"><i class="sw sw--c1"></i>Software renewal<em class="cat--software">Software</em><span class="num">$59.99</span></div>
+              <div class="clean-row"><i class="sw sw--c5"></i>Desk supplies<em class="cat--office">Office</em><span class="num">$145.20</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="pcard__text">
+          <h3>Manual tracking takes time</h3>
+          <p>Sorting receipts, checking spreadsheets and preparing reports takes valuable time away from running your business.</p>
+        </div>
+      </article>
+
+      <article class="pcard reveal">
+        <div class="pcard__viz pcard__viz--peach" aria-hidden="true">
+          <svg class="pcard__shape" viewBox="0 0 200 200"><use href="#s-comp-yellow"/></svg>
+          <div class="alert-stack">
+            <div class="renewal renewal--back"><b>Team chat plan</b><span class="num">$120.00</span></div>
+            <div class="renewal">
+              <span class="renewal__icon"><svg class="ico"><use href="#i-warn"/></svg></span>
+              <div class="renewal__text"><b>Annual plan renewed</b><span>Renewal wasn't in this month's plan</span></div>
+              <span class="renewal__amt num">$1,188.00</span>
+            </div>
+          </div>
+        </div>
+        <div class="pcard__text">
+          <h3>Unexpected spending</h3>
+          <p>Unnoticed renewals, duplicate payments and rising costs can quietly affect your bottom line.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 CORE PRODUCT FEATURES ============ -->
+<section class="features section" id="product">
+  <div class="container">
+    <header class="features__head">
+      <div>
+        <p class="eyebrow reveal">Introducing Finora AI</p>
+        <h2 class="h2 reveal">One intelligent platform.<br>A clearer picture of every expense.</h2>
+      </div>
+      <p class="lead reveal">Finora transforms scattered business spending into organized, actionable financial intelligence. Everything you need to stay informed, in one place.</p>
+    </header>
+
+    <div class="fgrid" id="features" data-stagger>
+      <!-- Feature 01 -->
+      <article class="fcard fcard--blue fcard--wide reveal">
+        <svg class="fcard__geo" viewBox="0 0 200 200" aria-hidden="true" data-parallax="0.05"><use href="#s-comp-blue"/></svg>
+        <div class="fcard__text">
+          <h3 class="h3">Every expense, automatically in place.</h3>
+          <p>Finora brings business transactions together and organizes them into one clear, continuously updated view. Spend less time collecting data and more time understanding it.</p>
+        </div>
+        <div class="fcard__mock">
+          <div class="mock mock--float" aria-label="Sample transaction list" role="group">
+            <span class="chip-synced"><span class="pulse"></span>Synced</span>
+            <div class="mock__head"><span>Transactions</span><span class="tag-sample">Sample data</span></div>
+            <ul class="txlist">
+              <li><span class="mono mono--a">A</span><span class="txlist__name">Adobe Creative Cloud</span><span class="pill cat--software">Software</span><span class="num">$59.99</span><span class="status" aria-label="Categorized"><svg class="ico"><use href="#i-check"/></svg></span></li>
+              <li><span class="mono mono--c">U</span><span class="txlist__name">Uber Business</span><span class="pill cat--travel">Travel</span><span class="num">$82.40</span><span class="status" aria-label="Categorized"><svg class="ico"><use href="#i-check"/></svg></span></li>
+              <li><span class="mono mono--b">G</span><span class="txlist__name">Google Workspace</span><span class="pill cat--software">Software</span><span class="num">$24.00</span><span class="status" aria-label="Categorized"><svg class="ico"><use href="#i-check"/></svg></span></li>
+              <li><span class="mono mono--a">A</span><span class="txlist__name">Amazon Business</span><span class="pill cat--office">Office supplies</span><span class="num">$145.20</span><span class="status" aria-label="Categorized"><svg class="ico"><use href="#i-check"/></svg></span></li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- Feature 02 -->
+      <article class="fcard fcard--green reveal">
+        <svg class="fcard__geo fcard__geo--b" viewBox="0 0 200 200" aria-hidden="true" data-parallax="0.05"><use href="#s-comp-green"/></svg>
+        <div class="fcard__text">
+          <h3 class="h3">Your expenses, understood automatically.</h3>
+          <p>AI identifies merchants, understands transaction patterns and places expenses into meaningful categories, helping keep your financial data organized.</p>
+        </div>
+        <div class="fcard__mock">
+          <div class="mock categorizer" id="categorizer" role="group" aria-label="Sample of a transaction being categorized">
+            <div class="categorizer__tx">
+              <span class="categorizer__raw" id="catRaw">UBER *TRIP 8821</span>
+              <span class="categorizer__amt num" id="catAmt">$82.40</span>
+            </div>
+            <div class="categorizer__status">
+              <span class="ai-loader" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span id="catStatus">Reading merchant…</span>
+            </div>
+            <ul class="catlist" id="catList">
+              <li data-cat="software"><i class="sw sw--c1"></i>Software &amp; Tools</li>
+              <li data-cat="travel"><i class="sw sw--c4"></i>Travel &amp; Transport</li>
+              <li data-cat="marketing"><i class="sw sw--c2"></i>Marketing</li>
+              <li data-cat="office"><i class="sw sw--c5"></i>Office Supplies</li>
+              <li data-cat="ops"><i class="sw sw--c3"></i>Operations</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- Feature 03 -->
+      <article class="fcard fcard--yellow reveal">
+        <svg class="fcard__geo" viewBox="0 0 200 200" aria-hidden="true" data-parallax="0.05"><use href="#s-comp-yellow"/></svg>
+        <div class="fcard__text">
+          <h3 class="h3">Find the patterns hiding in your spending.</h3>
+          <p>Finora analyzes your spending behaviour to surface unusual changes, recurring costs and opportunities to improve financial efficiency.</p>
+        </div>
+        <div class="fcard__mock">
+          <div class="mock insight-card">
+            <p class="fc__label"><span class="ai-badge"><svg class="ico--mark"><use href="#logo"/></svg></span>AI-powered insight</p>
+            <p class="insight-card__quote">“Software spending is up 18% compared to last month.”</p>
+            <dl class="insight-card__dl">
+              <div><dt>Possible cause</dt><dd>3 new subscriptions added this month.</dd></div>
+              <div><dt>Potential action</dt><dd>Review recurring subscriptions.</dd></div>
+            </dl>
+            <a class="link-arrow" href="#insights">Explore insight <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Feature 04 -->
+      <article class="fcard fcard--peach fcard--wide reveal">
+        <svg class="fcard__geo fcard__geo--c" viewBox="0 0 200 200" aria-hidden="true" data-parallax="0.05"><use href="#s-comp-peach"/></svg>
+        <div class="fcard__text">
+          <h3 class="h3">Stay ahead of your budgets.</h3>
+          <p>Set spending limits, monitor departmental budgets and get notified when spending approaches predefined thresholds.</p>
+        </div>
+        <div class="fcard__mock">
+          <div class="budget-grid" data-bars data-counters>
+            <div class="budget">
+              <div class="budget__top"><b><i class="sw sw--c2"></i>Marketing</b><span class="budget__pct"><span data-count="70" data-suffix="%">70%</span></span></div>
+              <p class="num">$<span data-count="8450">8,450</span> <span>/ $12,000</span></p>
+              <div class="bar"><i style="--v:70%"></i></div>
+            </div>
+            <div class="budget">
+              <div class="budget__top"><b><i class="sw sw--c3"></i>Operations</b><span class="budget__pct"><span data-count="62" data-suffix="%">62%</span></span></div>
+              <p class="num">$<span data-count="6200">6,200</span> <span>/ $10,000</span></p>
+              <div class="bar"><i style="--v:62%"></i></div>
+            </div>
+            <div class="budget budget--warn">
+              <div class="budget__top"><b><i class="sw sw--c1"></i>Software</b><span class="budget__pct"><span data-count="97" data-suffix="%">97%</span></span></div>
+              <p class="num">$<span data-count="4850">4,850</span> <span>/ $5,000</span></p>
+              <div class="bar bar--warn"><i style="--v:97%"></i></div>
+              <p class="budget__warn"><svg class="ico"><use href="#i-warn"/></svg>Approaching limit</p>
+            </div>
+            <div class="budget">
+              <div class="budget__top"><b><i class="sw sw--c4"></i>Travel</b><span class="budget__pct"><span data-count="52" data-suffix="%">52%</span></span></div>
+              <p class="num">$<span data-count="2100">2,100</span> <span>/ $4,000</span></p>
+              <div class="bar"><i style="--v:52%"></i></div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 HOW FINORA WORKS ============ -->
+<section class="how section" id="how-it-works">
+  <div class="container">
+    <div class="how__panel" id="howPanel">
+      <svg class="how__geo" viewBox="0 0 200 200" aria-hidden="true" data-parallax="0.04"><use href="#s-comp-steps"/></svg>
+      <header class="how__head">
+        <p class="eyebrow reveal">Simple by design</p>
+        <h2 class="h2 reveal">From scattered expenses to smarter decisions.</h2>
+        <p class="lead reveal">Getting control of your business spending shouldn't require complicated processes. Finora makes it simple.</p>
+      </header>
+
+      <div class="steps__wrap">
+      <span class="steps__line" aria-hidden="true"><i id="stepsFill"></i></span>
+      <ol class="steps">
+        <li class="step" data-play>
+          <span class="step__num">01</span>
+          <h3 class="h4">Connect your spending</h3>
+          <p>Bring your business financial information together in one place through supported account and financial data connections.</p>
+          <div class="step__viz viz-connect" aria-hidden="true">
+            <svg class="viz-connect__lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <path d="M50 18 C62 18 60 50 72 50" /><path d="M50 50 H72" /><path d="M50 82 C62 82 60 50 72 50" />
+            </svg>
+            <div class="viz-connect__cards">
+              <span class="acct"><i class="sw sw--c1"></i>Business card</span>
+              <span class="acct"><i class="sw sw--c3"></i>Main account</span>
+              <span class="acct"><i class="sw sw--c4"></i>Expense tool</span>
+            </div>
+            <span class="viz-connect__hub"><svg><use href="#logo"/></svg></span>
+          </div>
+        </li>
+
+        <li class="step" data-play>
+          <span class="step__num">02</span>
+          <h3 class="h4">Let AI organize everything</h3>
+          <p>Finora analyzes transactions, categorizes expenses and identifies spending patterns automatically.</p>
+          <div class="step__viz viz-ai" aria-hidden="true">
+            <div class="viz-ai__scanner"><span class="ai-badge"><svg class="ico--mark"><use href="#logo"/></svg></span><i></i></div>
+            <div class="viz-ai__chip">
+              <span class="viz-ai__before">ADOBE *CC 4417</span>
+              <span class="viz-ai__after"><i class="sw sw--c1"></i>Software</span>
+              <span class="num">$59.99</span>
+            </div>
+          </div>
+        </li>
+
+        <li class="step" data-play>
+          <span class="step__num">03</span>
+          <h3 class="h4">Make informed decisions</h3>
+          <p>Explore clear financial insights, monitor budgets and understand where your business money goes.</p>
+          <div class="step__viz viz-decide" aria-hidden="true" data-bars>
+            <div class="viz-decide__sum"><small>Total spend</small><b class="num">$48,290</b></div>
+            <div class="viz-decide__spark"><i style="--h:66%"></i><i style="--h:79%"></i><i style="--h:72%"></i><i style="--h:87%"></i><i style="--h:93%"></i><i style="--h:100%"></i></div>
+            <p class="viz-decide__insight"><span class="ai-badge"><svg class="ico--mark"><use href="#logo"/></svg></span>Software up 18%</p>
+            <div class="viz-decide__bar"><small>Marketing budget</small><div class="bar"><i style="--v:70%"></i></div></div>
+          </div>
+        </li>
+      </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 FINANCIAL INTELLIGENCE ============ -->
+<section class="intel" id="insights">
+  <div class="intel__sky" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="container">
+    <header class="intel__head">
+      <p class="eyebrow reveal">Beyond expense tracking</p>
+      <h2 class="h2 h2--xl reveal">Don't just track spending.<br>Understand what it means.</h2>
+      <p class="lead reveal">Finora turns financial activity into useful business intelligence, helping you spot trends, understand costs and make decisions with greater confidence.</p>
+    </header>
+
+    <div class="intel__parallax" data-parallax="0.035" data-parallax-min="1024">
+      <div class="board reveal" id="board">
+        <header class="board__head">
+          <div>
+            <h3 class="board__title">Financial intelligence</h3>
+            <p class="board__sub">Your business spending at a glance.</p>
+          </div>
+          <span class="tag-sample">Sample data · October 2026</span>
+        </header>
+
+        <dl class="kpis" data-counters>
+          <div class="kpi"><dt>Total expenses</dt><dd data-count="48290" data-prefix="$">$48,290</dd></div>
+          <div class="kpi"><dt>Average daily spend</dt><dd data-count="1609" data-prefix="$">$1,609</dd></div>
+          <div class="kpi"><dt>Largest category</dt><dd>Software</dd></div>
+          <div class="kpi"><dt>Monthly savings opportunity</dt><dd data-count="2450" data-prefix="$">$2,450</dd></div>
+        </dl>
+
+        <div class="board__charts">
+          <figure class="panel panel--donut">
+            <figcaption class="panel__title">Spending distribution</figcaption>
+            <div class="donut-wrap">
+              <div class="donut" id="donut"></div>
+              <ul class="legend" id="donutLegend"></ul>
+            </div>
+          </figure>
+          <figure class="panel panel--trend">
+            <figcaption class="panel__title">Monthly spending trend</figcaption>
+            <div class="trend" id="trend"></div>
+            <table class="sr-only">
+              <caption>Monthly spending, sample data</caption>
+              <thead><tr><th scope="col">Month</th><th scope="col">Spend</th></tr></thead>
+              <tbody>
+                <tr><td>May</td><td>$32,000</td></tr><tr><td>June</td><td>$38,000</td></tr><tr><td>July</td><td>$35,000</td></tr>
+                <tr><td>August</td><td>$42,000</td></tr><tr><td>September</td><td>$45,000</td></tr><tr><td>October</td><td>$48,290</td></tr>
+              </tbody>
+            </table>
+          </figure>
+          <aside class="advisor" aria-label="Finora AI recommends">
+            <h4 class="advisor__title"><span class="ai-badge"><svg class="ico--mark"><use href="#logo"/></svg></span>Finora AI recommends</h4>
+            <ul class="advisor__list" data-stagger>
+              <li class="reveal"><i class="sw sw--c1"></i>You spent 18% more on software this month.</li>
+              <li class="reveal"><i class="sw sw--c4"></i>Three recurring subscriptions may need review.</li>
+              <li class="reveal"><i class="sw sw--c2"></i>Your marketing budget is currently 70% utilized.</li>
+            </ul>
+            <button class="link-arrow" type="button" data-info="insights">View all insights <span aria-hidden="true">→</span></button>
+          </aside>
+        </div>
+
+        <p class="board__note">Insights are based on available connected financial data. Review suggested actions before making financial decisions. All figures shown are illustrative sample data.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 COMPLETE CONTROL AND VISIBILITY ============ -->
+<section class="control section" id="control">
+  <div class="container control__grid">
+    <div class="control__copy">
+      <h2 class="h2 reveal">A better way to stay in control.</h2>
+      <p class="lead reveal">Whether you're managing a small team or a growing business, Finora gives you the tools to monitor expenses and maintain financial clarity.</p>
+      <ul class="caps" data-stagger>
+        <li class="reveal"><button class="cap" type="button" data-goto-tab="team"><h3>Team spending visibility</h3><p>Understand how spending is distributed across teams and departments.</p></button></li>
+        <li class="reveal"><button class="cap" type="button" data-goto-tab="budgets"><h3>Budget oversight</h3><p>Set limits, monitor usage and identify departments approaching their budgets.</p></button></li>
+        <li class="reveal"><button class="cap" type="button" data-goto-tab="recurring"><h3>Recurring expense monitoring</h3><p>Keep track of subscriptions, renewals and regular business payments.</p></button></li>
+        <li class="reveal"><button class="cap" type="button" data-goto-tab="overview"><h3>Smarter expense reporting</h3><p>Generate clear summaries that make financial reviews easier.</p></button></li>
+      </ul>
+    </div>
+
+    <div class="preview reveal">
+      <svg class="preview__geo" viewBox="0 0 200 200" aria-hidden="true" data-parallax="0.05"><use href="#s-comp-control"/></svg>
+      <div class="tabs" role="tablist" aria-label="Product preview">
+        <span class="tabs__ind" aria-hidden="true"></span>
+        <button class="tab" role="tab" id="tab-overview" aria-controls="panel-overview" aria-selected="true" data-tab="overview" type="button">Overview</button>
+        <button class="tab" role="tab" id="tab-team" aria-controls="panel-team" aria-selected="false" tabindex="-1" data-tab="team" type="button">Team spending</button>
+        <button class="tab" role="tab" id="tab-budgets" aria-controls="panel-budgets" aria-selected="false" tabindex="-1" data-tab="budgets" type="button">Budgets</button>
+        <button class="tab" role="tab" id="tab-recurring" aria-controls="panel-recurring" aria-selected="false" tabindex="-1" data-tab="recurring" type="button">Recurring expenses</button>
+      </div>
+
+      <div class="screen">
+        <div class="tpanel" role="tabpanel" id="panel-overview" aria-labelledby="tab-overview" tabindex="0">
+          <div class="tpanel__top"><div><small>Total spending</small><p class="tpanel__big num">$48,290</p></div><span class="tag-sample">Sample data</span></div>
+          <p class="tpanel__label">Category distribution</p>
+          <div class="stack" role="img" aria-label="Software and Tools $12,500, Marketing $10,200, Operations $9,400, Travel $6,800, Other $5,000, Office Supplies $4,390">
+            <i style="flex:12500;background:var(--c1)"></i><i style="flex:10200;background:var(--c2)"></i><i style="flex:9400;background:var(--c3)"></i><i style="flex:6800;background:var(--c4)"></i><i style="flex:4390;background:var(--c5)"></i><i style="flex:5000;background:var(--c6)"></i>
+          </div>
+          <ul class="stack__key">
+            <li><i class="sw" style="background:var(--c1)"></i>Software</li><li><i class="sw" style="background:var(--c2)"></i>Marketing</li><li><i class="sw" style="background:var(--c3)"></i>Operations</li><li><i class="sw" style="background:var(--c4)"></i>Travel</li><li><i class="sw" style="background:var(--c5)"></i>Office</li><li><i class="sw" style="background:var(--c6)"></i>Other</li>
+          </ul>
+          <p class="tpanel__label">Monthly trend</p>
+          <div class="minibars" role="img" aria-label="Monthly spend rising from $32,000 in May to $48,290 in October">
+            <div style="--h:66%"><i></i><span>May</span></div><div style="--h:79%"><i></i><span>Jun</span></div><div style="--h:72%"><i></i><span>Jul</span></div><div style="--h:87%"><i></i><span>Aug</span></div><div style="--h:93%"><i></i><span>Sep</span></div><div class="is-now" style="--h:100%"><i></i><span>Oct</span></div>
+          </div>
+        </div>
+
+        <div class="tpanel" role="tabpanel" id="panel-team" aria-labelledby="tab-team" tabindex="0" hidden>
+          <div class="tpanel__top"><div><small>Spending by department</small><p class="tpanel__big">Marketing leads</p></div><span class="tag-sample">Sample data</span></div>
+          <ul class="teamrows">
+            <li style="--v:100%;--i:0;--team:var(--color-orange)"><div><b>Marketing</b><span class="num">$12,500</span></div><div class="teambar"><i></i></div></li>
+            <li style="--v:73.6%;--i:1;--team:var(--color-green)"><div><b>Operations</b><span class="num">$9,200</span></div><div class="teambar"><i></i></div></li>
+            <li style="--v:68.8%;--i:2;--team:var(--color-blue)"><div><b>Product</b><span class="num">$8,600</span></div><div class="teambar"><i></i></div></li>
+            <li style="--v:59.2%;--i:3;--team:var(--color-yellow)"><div><b>Sales</b><span class="num">$7,400</span></div><div class="teambar"><i></i></div></li>
+          </ul>
+        </div>
+
+        <div class="tpanel" role="tabpanel" id="panel-budgets" aria-labelledby="tab-budgets" tabindex="0" hidden>
+          <div class="tpanel__top"><div><small>Budget usage</small><p class="tpanel__big">1 department near limit</p></div><span class="tag-sample">Sample data</span></div>
+          <ul class="budgetrows" id="budgetRows">
+            <li><div><b><i class="sw sw--c2"></i>Marketing</b><span class="num">$8,450 / $12,000</span><em>70%</em></div><div class="bar"><i style="--v:70%"></i></div></li>
+            <li><div><b><i class="sw sw--c3"></i>Operations</b><span class="num">$6,200 / $10,000</span><em>62%</em></div><div class="bar"><i style="--v:62%"></i></div></li>
+            <li class="is-warn"><div><b><i class="sw sw--c1"></i>Software <svg class="ico" role="img" aria-label="Approaching limit"><use href="#i-warn"/></svg></b><span class="num">$4,850 / $5,000</span><em>97%</em></div><div class="bar bar--warn"><i style="--v:97%"></i></div></li>
+            <li><div><b><i class="sw sw--c4"></i>Travel</b><span class="num">$2,100 / $4,000</span><em>52%</em></div><div class="bar"><i style="--v:52%"></i></div></li>
+          </ul>
+        </div>
+
+        <div class="tpanel" role="tabpanel" id="panel-recurring" aria-labelledby="tab-recurring" tabindex="0" hidden>
+          <div class="tpanel__top"><div><small>Recurring expenses</small><p class="tpanel__big">4 subscriptions</p></div><span class="tag-sample">Sample data</span></div>
+          <ul class="recur">
+            <li style="--i:0"><span class="mono mono--a">A</span><b>Adobe</b><span class="num">$59.99/month</span><span class="state state--active">Active</span></li>
+            <li style="--i:1"><span class="mono mono--c">S</span><b>Slack</b><span class="num">$120/month</span><span class="state state--upcoming">Upcoming</span></li>
+            <li style="--i:2"><span class="mono mono--b">N</span><b>Notion</b><span class="num">$240/month</span><span class="state state--review">Review</span></li>
+            <li style="--i:3"><span class="mono mono--a">G</span><b>Google Workspace</b><span class="num">$180/month</span><span class="state state--active">Active</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 09 FAQ ============ -->
+<section class="faq section" id="faq">
+  <div class="container faq__grid">
+    <header class="faq__head">
+      <p class="eyebrow reveal">Got questions?</p>
+      <h2 class="h2 reveal">Everything you need to know.</h2>
+      <p class="lead reveal">A few quick answers to help you understand how Finora works.</p>
+    </header>
+    <div class="accordion reveal" id="accordion">
+      <div class="acc is-open"><h3><button type="button" aria-expanded="true" aria-controls="a1" id="q1">What is Finora?<span class="acc__icon" aria-hidden="true"></span></button></h3>
+        <div class="acc__panel" id="a1" role="region" aria-labelledby="q1"><div><p>Finora is an AI-powered business spend management platform designed to help businesses track expenses, organize transactions and understand their financial activity.</p></div></div></div>
+      <div class="acc"><h3><button type="button" aria-expanded="false" aria-controls="a2" id="q2">How does Finora track business expenses?<span class="acc__icon" aria-hidden="true"></span></button></h3>
+        <div class="acc__panel" id="a2" role="region" aria-labelledby="q2"><div><p>Finora is designed to bring supported business financial data into one place, helping organize and analyze transactions through automated workflows.</p></div></div></div>
+      <div class="acc"><h3><button type="button" aria-expanded="false" aria-controls="a3" id="q3">How does AI help manage expenses?<span class="acc__icon" aria-hidden="true"></span></button></h3>
+        <div class="acc__panel" id="a3" role="region" aria-labelledby="q3"><div><p>AI can help categorize transactions, identify spending patterns, highlight unusual activity and generate useful financial insights.</p></div></div></div>
+      <div class="acc"><h3><button type="button" aria-expanded="false" aria-controls="a4" id="q4">Can I monitor spending across different departments?<span class="acc__icon" aria-hidden="true"></span></button></h3>
+        <div class="acc__panel" id="a4" role="region" aria-labelledby="q4"><div><p>Finora is designed to provide departmental spending visibility, helping businesses understand how budgets are being utilized across teams.</p></div></div></div>
+      <div class="acc"><h3><button type="button" aria-expanded="false" aria-controls="a5" id="q5">Can Finora identify unnecessary expenses?<span class="acc__icon" aria-hidden="true"></span></button></h3>
+        <div class="acc__panel" id="a5" role="region" aria-labelledby="q5"><div><p>Finora can highlight unusual spending patterns and recurring costs that may deserve a closer review. Final decisions remain with the business.</p></div></div></div>
+      <div class="acc"><h3><button type="button" aria-expanded="false" aria-controls="a6" id="q6">Is my financial information secure?<span class="acc__icon" aria-hidden="true"></span></button></h3>
+        <div class="acc__panel" id="a6" role="region" aria-labelledby="q6"><div><p>Finora's intended approach is to prioritize data protection, access controls and responsible handling of financial information. Specific security certifications and safeguards should only be advertised once implemented and verified.</p></div></div></div>
+      <div class="acc"><h3><button type="button" aria-expanded="false" aria-controls="a7" id="q7">Is Finora suitable for small businesses?<span class="acc__icon" aria-hidden="true"></span></button></h3>
+        <div class="acc__panel" id="a7" role="region" aria-labelledby="q7"><div><p>Yes. The platform is intended to support businesses looking for a simpler way to understand and manage their operational spending.</p></div></div></div>
+      <div class="acc"><h3><button type="button" aria-expanded="false" aria-controls="a8" id="q8">How can I get started?<span class="acc__icon" aria-hidden="true"></span></button></h3>
+        <div class="acc__panel" id="a8" role="region" aria-labelledby="q8"><div><p>You can request a demo to learn more about Finora and explore how the platform can support your business.</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10 FINAL CTA ============ -->
+<section class="cta" id="demo">
+  <div class="container">
+    <div class="cta__box">
+      <div class="cta__geo" aria-hidden="true">
+        <svg class="cta__s cta__s--1" style="color:var(--color-blue)" viewBox="0 0 100 100" data-parallax="0.05"><use href="#s-circle" filter="url(#grain)"/></svg>
+        <svg class="cta__s cta__s--2" style="color:var(--color-green)" viewBox="0 0 100 100" data-parallax="0.08"><use href="#s-capsule" filter="url(#grain)"/></svg>
+        <svg class="cta__s cta__s--3" style="color:var(--color-yellow)" viewBox="0 0 100 100" data-parallax="0.04"><use href="#s-leaf" filter="url(#grain)"/></svg>
+        <svg class="cta__s cta__s--4" style="color:var(--color-orange)" viewBox="0 0 100 100" data-parallax="0.05"><use href="#s-circle" filter="url(#grain)"/></svg>
+        <svg class="cta__s cta__s--5" style="color:var(--color-blue)" viewBox="0 0 100 100" data-parallax="0.08"><use href="#s-capsule" filter="url(#grain)"/></svg>
+        <svg class="cta__s cta__s--6" style="color:var(--color-green)" viewBox="0 0 100 100" data-parallax="0.04"><use href="#s-leaf" filter="url(#grain)"/></svg>
+      </div>
+      <div class="cta__inner">
+        <p class="eyebrow reveal">Your business. Better understood.</p>
+        <h2 class="h2 h2--xl reveal">Take the guesswork out of business spending.</h2>
+        <p class="lead reveal">See the bigger picture, uncover smarter insights and bring your business expenses under control with Finora.</p>
+        <div class="actions actions--center reveal">
+          <button class="btn btn--primary" type="button" data-open-form="demo">Book a Demo <span class="btn__arrow" aria-hidden="true">→</span></button>
+          <button class="btn btn--ghost" type="button" data-open-form="contact">Get in Touch</button>
+        </div>
+        <p class="micro reveal">Start building a clearer picture of your business finances.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container footer__top">
+    <div class="footer__brand">
+      <a class="brand" href="#top" aria-label="Finora home">
+        <svg class="brand__mark" aria-hidden="true"><use href="#logo"/></svg>
+        <span class="brand__word">Finora</span>
+      </a>
+      <p>Smarter business spending starts with better visibility. Finora helps businesses understand, track and manage expenses with AI.</p>
+      <div class="footer__social">
+        <button type="button" data-info="linkedin">LinkedIn</button>
+        <button type="button" data-info="x">X</button>
+      </div>
+    </div>
+    <nav class="footer__col" aria-label="Platform">
+      <h3>Platform</h3>
+      <a href="#product">Product</a>
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#insights">Insights</a>
+    </nav>
+    <nav class="footer__col" aria-label="Company">
+      <h3>Company</h3>
+      <button type="button" data-info="about">About Finora</button>
+      <button type="button" data-open-form="contact">Contact</button>
+      <button type="button" data-open-form="demo">Book a Demo</button>
+    </nav>
+    <nav class="footer__col" aria-label="Resources">
+      <h3>Resources</h3>
+      <a href="#faq">FAQs</a>
+      <a href="#integrations">Integrations</a>
+      <button type="button" data-info="privacy">Privacy Policy</button>
+      <button type="button" data-info="terms">Terms of Service</button>
+    </nav>
+  </div>
+  <div class="container footer__bottom">
+    <span>© 2026 Finora. All rights reserved.</span>
+    <span>Built for smarter business spending.</span>
+  </div>
+</footer>
+
+<!-- Demo / contact form -->
+<dialog class="modal" id="formModal" aria-labelledby="formTitle">
+  <button class="modal__close" type="button" data-close aria-label="Close"><svg class="ico"><use href="#i-close"/></svg></button>
+  <div id="formView">
+    <p class="prototype-note">Prototype form. Nothing is sent or booked.</p>
+    <h2 class="modal__title" id="formTitle">Book a demo</h2>
+    <p class="modal__lead" id="formLead">Tell us a little about your business.</p>
+    <form id="demoForm" novalidate>
+      <div class="field">
+        <label for="fName">Full name</label>
+        <input id="fName" name="name" type="text" autocomplete="name" required aria-describedby="fName-e">
+        <p class="field__err" id="fName-e"></p>
+      </div>
+      <div class="field">
+        <label for="fEmail">Work email</label>
+        <input id="fEmail" name="email" type="email" autocomplete="email" required aria-describedby="fEmail-e">
+        <p class="field__err" id="fEmail-e"></p>
+      </div>
+      <div class="field">
+        <label for="fCompany">Company name</label>
+        <input id="fCompany" name="company" type="text" autocomplete="organization" required aria-describedby="fCompany-e">
+        <p class="field__err" id="fCompany-e"></p>
+      </div>
+      <div class="field" id="sizeField">
+        <label for="fSize">Company size</label>
+        <select id="fSize" name="size" required aria-describedby="fSize-e">
+          <option value="">Select a size</option>
+          <option>1–10 people</option>
+          <option>11–50 people</option>
+          <option>51–200 people</option>
+          <option>201+ people</option>
+        </select>
+        <p class="field__err" id="fSize-e"></p>
+      </div>
+      <div class="field" id="messageField" hidden>
+        <label for="fMessage">How can we help? <span>(optional)</span></label>
+        <textarea id="fMessage" name="message" rows="3"></textarea>
+      </div>
+      <button class="btn btn--primary btn--full" type="submit"><span id="formSubmitLabel">Submit request</span> <span class="btn__arrow" aria-hidden="true">→</span></button>
+    </form>
+  </div>
+  <div class="modal__success" id="formSuccess" hidden>
+    <span class="modal__tick"><svg class="ico"><use href="#i-check"/></svg></span>
+    <h2 class="modal__title" id="successTitle" tabindex="-1"></h2>
+    <p class="modal__lead">This is a front-end prototype, so your details were not sent anywhere and no demo has been booked. A live version would route this to the Finora team.</p>
+    <button class="btn btn--ghost btn--full" type="button" data-close>Close</button>
+  </div>
+</dialog>
+
+<!-- Short notices for destinations that don't exist yet in this prototype -->
+<dialog class="modal modal--info" id="infoModal" aria-labelledby="infoTitle">
+  <button class="modal__close" type="button" data-close aria-label="Close"><svg class="ico"><use href="#i-close"/></svg></button>
+  <h2 class="modal__title" id="infoTitle"></h2>
+  <div class="modal__lead" id="infoBody"></div>
+  <div class="modal__foot" id="infoFoot"></div>
+</dialog>
+
+<div class="chart-tip" id="chartTip" role="presentation"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
